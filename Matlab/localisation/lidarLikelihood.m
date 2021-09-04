@@ -2,6 +2,8 @@
 % This function takes in the measurements for a
 function [w] = lidarLikelihood(y,x,map,params,M)
 
+map.z_use = map.mapped; %Ensure "seen" map is used for particle likelihoods
+
 if nargin < 5
     M = 1;
 end

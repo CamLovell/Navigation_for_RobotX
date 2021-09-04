@@ -113,16 +113,18 @@ for i = 1:length(tHist)-1
             warning(warn);
             break;
         end
-        [r,Npts,Epts] = lidarSimulation(x(:,i),map,lidarParam);
+        
         [ECEF,head] = spatialDualSimulation(x(:,i),spacialParam,'RTK','ECEF');
-        [lidarwHist(:,i)] = lidarLikelihood(r,xpHist(:,:,i),map,lidarParam,M);
         [GPSwHist(:,i)] = GPSLikelihood(ECEF,xpHist(:,:,i),spacialParam,M);
         [IMUwHist(:,i)] = IMULikelihood(head,xpHist(:,:,i),spacialParam,M);
         
         lwHist(:,i) = GPSwHist(:,i) + IMUwHist(:,i);
-        if(tHist(i) > 2)       
-        lwHist(:,i) = lidarwHist(:,i) + lwHist(:,i);
-        end        
+        if(tHist(i) > 2)
+            [r,Npts,Epts] = lidarSimulation(x(:,i),map,lidarParam);
+            [lidarwHist(:,i)] = lidarLikelihood(r,xpHist(:,:,i),map,lidarParam,M);
+            
+            lwHist(:,i) = lidarwHist(:,i) + lwHist(:,i);
+        end
         lwHist(:,i) = lwHist(:,i) - logSumExponential(lwHist(:,i));
 %         lwHist_2(:,i) = GPSwHist(:,i) - logSumExponential(GPSwHist(:,i));
 

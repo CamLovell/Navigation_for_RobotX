@@ -458,12 +458,12 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
         return;
     }
     
-    tmp = mxGetField(prhs[0], 0, "exp");
+    tmp = mxGetField(prhs[0], 0, "z_use");
     if (tmp!=NULL){
         map.z = mxGetPr(tmp);
     }
     else {
-        mexErrMsgTxt("No such field: map.exp");
+        mexErrMsgTxt("No such field: map.z_use");
         return;
     }
     

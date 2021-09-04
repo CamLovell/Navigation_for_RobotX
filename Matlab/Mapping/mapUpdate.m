@@ -85,6 +85,11 @@ function map = mapUpdate(y,x,map,param)
     map.logodds(map.logodds > 50) = 50;
     map.logodds(map.logodds < -50) = -50;
     
+    map.mapped = map.logodds;
+    
+    map.mapped(map.mapped > 0) = 1;
+    map.mapped(map.mapped <= 0) = 0;
+    
     % Look at edge detection stuff??
            
 end

@@ -11,7 +11,7 @@ function [param] = lidarParam()
     % M8 Paramaters from Data Sheet and User Guide
     param.maxRange = 150;
     param.min = 1;
-    param.sigma = 0.03;
+    param.sigma = 0.05;
     param.res = 0.003;
     param.freqRot = 10;
     param.freqFire = 53828;

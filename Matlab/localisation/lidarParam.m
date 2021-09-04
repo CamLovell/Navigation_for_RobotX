@@ -11,13 +11,13 @@ function [param] = lidarParam()
     % M8 Paramaters from Data Sheet and User Guide
     param.maxRange = 150;
     param.min = 1;
-    param.sigma = 0.03;
+    param.sigma = 0.05;
     param.freqRot = 10;
     param.freqFire = 53828;
 %     param.rotUnit = 360/10400;
     param.beamAngle = [-0.318505,-0.2692,-0.218009,-0.165195,-0.111003,-0.0557982,0.0,0.0557982];
-    param.resDeg      = (360/10400);
-%     param.resDeg      = 2.5;
+%     param.resDeg      = (360/10400);
+    param.resDeg      = 2.5;
     param.startDeg    = -180;
     param.stopDeg     = 180-param.resDeg;
     param.weights     = [0.7 0.2 0.09 0.01];
