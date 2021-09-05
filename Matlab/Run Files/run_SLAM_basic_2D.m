@@ -43,10 +43,11 @@ IMUwHist = zeros(M,length(tHist));
 lwHist(:,1) = lw(:);
 xpHist = nan(6,M,length(tHist));
 xpHist(:,:,1) = xp;
+xMLHist = nan(6,length(tHist));
 
-fig     = 1;
-hf      = figure(fig);
-clf(fig);
+%% Setting up Plots
+hf      = figure(1);
+clf(1);
 hf.Color = 'w';
 ax      = axes(hf,'FontSize',14);
 hold(ax,'on');
@@ -95,13 +96,17 @@ rRNn = nan(3,length(tHist));
 rTLNn = nan(3,length(tHist));
 rTRNn = nan(3,length(tHist));
 
+%% Run Simulation with SLAM
+
 % Initial map update
 map.z_use = map.exp;
 [r,Npts,Epts] = lidarSimulation(x0,map,lidarParam);
 [~,xpIdx] = max(lw);
+xMLHist(:,1) = xp(:,1);
 map = mapUpdate(r,xp(:,xpIdx),map,lidarParam);
 
 % map.z_use = map.mapped;
+
 
 for i = 1:length(tHist)-1
     try
@@ -123,9 +128,9 @@ for i = 1:length(tHist)-1
         [GPSwHist(:,i)] = GPSLikelihood(ECEF,xpHist(:,:,i),spacialParam,M);
         [IMUwHist(:,i)] = IMULikelihood(head,xpHist(:,:,i),spacialParam,M);
         
-        lwHist(:,i) = GPSwHist(:,i)*1000 + IMUwHist(:,i);
+        lwHist(:,i) = GPSwHist(:,i) + IMUwHist(:,i);
         
-        if(tHist(i) > 1)
+        if(tHist(i) > 0.5)
             map.z_use = map.exp; %ensure true map is used when taking mesurments
             [r,Npts,Epts] = lidarSimulation(x(:,i),map,lidarParam);
             [lidarwHist(:,i)] = lidarLikelihood(r,xpHist(:,:,i),map,lidarParam,M);
@@ -137,6 +142,7 @@ for i = 1:length(tHist)-1
         
         
         [~,mlIdx] = max(lwHist(:,i));
+        xMLHist(:,i) = xpHist(:,mlIdx,i);
         xpPlot = xpHist(:,:,i); % Save particles before resampling (for plotting)
         
         %Generate indicies according to categorical distribution
@@ -150,7 +156,7 @@ for i = 1:length(tHist)-1
         end
         
         % Update Map assuming most likely particle
-        map = mapUpdate(r,xpHist(:,mlIdx,i),map,lidarParam);
+        map = mapUpdate(r,xMLHist(:,i),map,lidarParam);
         
         % Compute next control action
         U = controlMPC(tHist(i+1),x(:,i+1),u,U,param,map);
@@ -202,5 +208,49 @@ for i = 1:length(tHist)-1
     end
 %     waitbar(i/length(tHist),wh);    % Update waitbar
 end
+
+%% Plotting of results
+
+figure(2);
+
+%Plot North Position
+subplot(2,2,1);
+plot(tHist,x(1,:),tHist,xMLHist(1,:));
+legend("Actual State","Estimated State");
+title("North Position");
+xlabel("Time (s)");
+ylabel("North (m) ");
+
+%Plot East Position
+subplot(2,2,2);
+plot(tHist,x(2,:),tHist,xMLHist(2,:));
+legend("Actual State","Estimated State");
+title("East Position");
+xlabel("Time (s)");
+ylabel("East (m)");
+
+%Plot Psi Angle
+subplot(2,2,3);
+plot(tHist,x(3,:)*180/pi,tHist,xMLHist(3,:)*180/pi);
+legend("Actual State","Estimated State");
+title("Heading Angle");
+xlabel("Time (s)");
+ylabel("Heading Angle (\circ)");
+
+%Plot Psi Angle
+subplot(2,2,4);
+plot(x(2,:),x(1,:),xMLHist(2,:),xMLHist(1,:));
+legend("Actual State","Estimated State");
+title("N-E Combined 2D");
+xlabel("East (m)");
+ylabel("North (m)");
+
+sgtitle("Estimated vs Actual States");
+beep;
+
+
+
+
+
 
 

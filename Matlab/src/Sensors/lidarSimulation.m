@@ -5,6 +5,12 @@ pose.E = x(2);
 pose.psi = x(3);
 
 %Optain true rages to obstacles
+Nidx = round(((pose.N-map.y(1))/(map.y(end)-map.y(1)))*(length(map.y)-1)+1);
+Eidx = round(((pose.E-map.x(1))/(map.x(end)-map.x(1)))*(length(map.x)-1)+1);
+if(map.logodds(Nidx,Eidx) < 0)
+%     error('Particle Generated in Ocupied Cell');
+    a = 1;
+end
 true_range = lidarScanNE(map,param,pose);
 
 %Simulate noise and missed hits
