@@ -103,8 +103,8 @@ map.z_use = map.exp;
 [r,Npts,Epts] = lidarSimulation(x0,map,lidarParam);
 [~,xpIdx] = max(lw);
 xMLHist(:,1) = xp(:,1);
-map = mapUpdate(r,xp(:,xpIdx),map,lidarParam);
-
+map.logodds = mapUpdate_cpp(r,xp(:,xpIdx),map,lidarParam);
+map.mapped = map.logodds;
 % map.z_use = map.mapped;
 
 
@@ -156,8 +156,8 @@ for i = 1:length(tHist)-1
         end
         
         % Update Map assuming most likely particle
-        map = mapUpdate(r,xMLHist(:,i),map,lidarParam);
-        
+        map.logodds = mapUpdate_cpp(r,xMLHist(:,i),map,lidarParam);
+        map.mapped = map.logodds;
         % Compute next control action
         U = controlMPC(tHist(i+1),x(:,i+1),u,U,param,map);
         
