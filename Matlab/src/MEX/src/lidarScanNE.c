@@ -326,7 +326,7 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
     char *typestr;
     
     mwSize dims[3], numd, *dimd;
-    mxArray *tmp;
+ 
     
     /* Check that we have the correct number of arguments */
     if(nrhs != 3){

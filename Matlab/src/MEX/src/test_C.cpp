@@ -3,10 +3,11 @@
 #include "math.h"
 #include <Eigen>
 
-void square(Eigen::MatrixXd & in1, Eigen::MatrixXd & out){
-    out.resize(2,2);
+void square(Eigen::MatrixXd & in1, Eigen::MatrixXd & in2, Eigen::MatrixXd & out){
+    out.resize(4,6);
     // out = (in1.array() < 3.0).select(1,out);
-    out = (in1);
+    // out = (in1);
+    out << in1*in2;
 }
 // void tripProd(double & a, double & b, double & c, double & out){
 //     out = a*b*c;
@@ -15,7 +16,7 @@ void square(Eigen::MatrixXd & in1, Eigen::MatrixXd & out){
 void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[]){
     Eigen::MatrixXd mat1, mat2,out;
     mexPrintf("un-init rows = %f",mat1.cols());
-    Eigen::Map<Eigen::MatrixXd> map(mxGetPr(prhs[0]),2,2);
+    Eigen::Map<Eigen::MatrixXd> map(mxGetPr(prhs[0]),4,1);
     mat1 = map;
     // Eigen::Map<Eigen::MatrixXd> map2(mxGetPr(prhs[1]),1,6);
     // mat2 = map2;
