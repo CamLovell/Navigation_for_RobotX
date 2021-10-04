@@ -32,7 +32,7 @@ function [param] = lidarParam()
     
     % Map update stuff
     param.hitDepth = 0.5;
-    param.hitChange = 5*param.res;
-    param.passChange = 2*param.res;
+    param.hitChange = 2*param.res;
+    param.passChange = 1*param.res;
 
 end

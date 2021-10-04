@@ -1,6 +1,6 @@
 function [lw,xp] = boatInitialStateDistribution()
 
-M 	= 300;                        % number of particles
+M 	= 2000;                        % number of particles
 
 relw = ones(1,M);
 lw	= log(relw/sum(relw));          % log weights (one value per particle)
