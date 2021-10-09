@@ -125,7 +125,7 @@ for i = 1:length(tHist)-1
         [IMUwHist(:,i)] = IMULikelihood(head,xpHist(:,:,i),spacialParam,M);
         
         lwHist(:,i) = GPSwHist(:,i) + IMUwHist(:,i);
-        if(tHist(i) > 0.5)
+        if(tHist(i) > 2)
             [r,Npts,Epts] = lidarSimulation(x(:,i),map,lidarParam);
             [lidarwHist(:,i)] = lidarLikelihood(r,xpHist(:,:,i),map,lidarParam,M);
             
