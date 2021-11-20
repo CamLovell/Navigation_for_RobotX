@@ -1,8 +1,8 @@
 # Navigation for RobotX
-## Introduction
 
-This repositiory contains all the code for running the navigation solution for the NUMarine navigation solution which I developed as my final year project. I will update this *README* further in the future, just wanted to get something in for my initial set up.
+This repository contains all the code for running the MATLAB simulations of the navigation solution developed for the NUMarine team. This was developed as my final year project and completed on 20th November 2021. I plan to update this *README* over the coming summer break to provide future NUMarine team members with instruction on operation.
 
-This is just to test my SSH connection doesnt require a login
+All necessary files to run the solution are contained in the *Run Files* folder and should operate with no adjustments.
+
 
 

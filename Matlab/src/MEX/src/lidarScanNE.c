@@ -34,7 +34,7 @@ int linSegInt(double x1, double x2, double y1,double y2,double x3, double x4, do
     num1 = (x4-x3)*(y1-y3) - (y4-y3)*(x1-x3);
     num2 = (x2-x1)*(y1-y3) - (y2-y1)*(x1-x3);
     den  = (y4-y3)*(x2-x1) - (x4-x3)*(y2-y1);
-
+    mexPrintf("num1 = %10.3e, num2 = %10.3e, den = %10.3e\n",num1,num2,den);
     u1      = num1/den;
     u2      = num2/den;
 
@@ -49,6 +49,8 @@ int linSegInt(double x1, double x2, double y1,double y2,double x3, double x4, do
 
 //This function updates the maps
 void findRange(Map *map, Scanner *scanner, Pose *pose, double *range, double *xr, double *yr, double *C){
+    
+    
     int L = scanner->numScans;
     double x0, y0, h0, x1, x2, y1 ,y2, xs, ys, xe, ye, r[4], xint[4], yint[4];
     double xmin, xmax, ymin, ymax, ycur;
@@ -58,7 +60,6 @@ void findRange(Map *map, Scanner *scanner, Pose *pose, double *range, double *xr
     double *x = map->x;
     double *y = map->y;
     double *z = map->z;
-    
     N = map->numX; //Number of x grid lines (should be num x cells + 1)
     M = map->numY; //Number of y grid lines (should be num y cells + 1)
     
@@ -71,7 +72,7 @@ void findRange(Map *map, Scanner *scanner, Pose *pose, double *range, double *xr
     x0 = pose->x - scanner->x0;
     y0 = pose->y - scanner->y0;
     h0 = pose->h - scanner->h0;
-    
+
     int xsi, xei, ysi, yei, xci, yci;
     double dxse, dyse, xc, yc, xdist, ydist;
     
@@ -85,6 +86,7 @@ void findRange(Map *map, Scanner *scanner, Pose *pose, double *range, double *xr
         //Calc cos(heading) and sin(heading)
         double cosHead = cos(PI*(h0+scanner->startDeg+i*scanner->resDeg)/180.0);
         double sinHead = sin(PI*(h0+scanner->startDeg+i*scanner->resDeg)/180.0);
+        mexPrintf("par = %4d, s = %4d\n",(h0+scanner->startDeg+i*scanner->resDeg),sinHead);
         
         //Calc end point of laser ray
         x2 = x0+scanner->maxRange * sinHead;
@@ -334,7 +336,7 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
         mexErrMsgTxt("There must be three arguments to this function (map, scanner and pose - see help).");
         return;
     }
-    if(nlhs > 3){
+    if(nlhs > 4){
         mexErrMsgTxt("Too many output arguments.");
         return;
     }

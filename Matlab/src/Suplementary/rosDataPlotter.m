@@ -1,13 +1,16 @@
 clear;
 clc;
 close all;
+% This script reads csv data files from saved Gazebo simulations and plots them
 
-addpath("~/NUMarine_ws/src/navigation/data");
+% Add path to stored data
+addpath("~/NUMarine_ws/src/navigation/data"); % Path to file will vary depending on instalation
 
+% Read in stored data
 estimated = readmatrix('estimatedState.csv');
 tru = readmatrix('trueState.csv');
 
-% recIdx = find(tru(:,1)>1e-10);
+% Extract data and exclude first few times steps (uniniutalised memory typically)
 recIdx = 4:size(tru,1);
 
 N = estimated(recIdx,1)';
@@ -28,6 +31,8 @@ timeSteps = size(recIdx,2);
 
 t = 0:0.125:(timeSteps-1)/8;
 
+% Plot Position Tracking
+figure(1);
 %Plot North Position
 subplot(2,2,1);
 plot(t,N,t,Ntrue);
@@ -61,5 +66,40 @@ xlabel("East (m)");
 ylabel("North (m)");
 
 sgtitle("Estimated vs Actual States");
-beep;
+
+
+% Plot Errors
+figure(2);
+%Plot North Error
+subplot(2,2,1);
+plot(t,Ntrue-N);
+title("Absolute Error in N");
+xlabel("Time (s)");
+ylabel("Error (m) ");
+%Plot East Error
+subplot(2,2,2);
+plot(t,Etrue-E);
+title("Absolute Error in E");
+xlabel("Time (s)");
+ylabel("Error (m)");
+%Plot Psi Angle Error
+subplot(2,2,3);
+plot(t,psitrue-psi);
+title("Absolute Error in \psi");
+xlabel("Time (s)");
+ylabel("Error (\circ)");
+%Plot RMS position error
+RMS = sqrt(((Ntrue-N).^2+(Etrue-E).^2)/2);
+subplot(2,2,4);
+plot(t,RMS);
+title("RMS Position Error");
+xlabel("Time (s)");
+ylabel("Error (m)");
+sgtitle("Error in States");
+
+% Calculate errors
+avgRMS = mean(RMS);
+maxE = max(abs(Etrue-E));
+maxN = max(abs(Ntrue-N));
+avgPsi = mean(abs(psitrue-psi));
 
